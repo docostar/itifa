@@ -1,5 +1,5 @@
 from openpyxl import load_workbook, Workbook
-from fun import get_practical_number
+from fun import get_practical_number,distribute_marks
 import shutil
 
 iti_name = "BAGASARA(MAHILA)"
@@ -31,7 +31,10 @@ output_file="LO_"+str(lo_no)+".xlsx"
 shutil.copy(demo_file, output_file)
 print(f"File {output_file} created successfully.")
 wb_out = load_workbook(output_file)
+marks_start_row = 9
 start_practical, end_practical = get_practical_number(sheet_lo,lo_no)
+no_of_practical = end_practical - start_practical + 1
+
 
 for student_row_no in range(student_start_row,student_end_row+1):
     student_row_str=str(student_row_no)
@@ -53,5 +56,16 @@ for student_row_no in range(student_start_row,student_end_row+1):
     student_sheet["E5"].value = trade
     student_sheet["AD5"].value = duration
     student_sheet["AK5"].value = si_name
+
+    practical_no = start_practical
+    practical_marks = distribute_marks(student_main_mark,no_of_practical)
+    for row_no in range(marks_start_row,marks_start_row+no_of_practical):
+        row_no_str = str(row_no)
+        student_sheet["A"+row_no_str] = "LO"+str(lo_no)
+        student_sheet["B"+row_no_str] = practical_no
+        student_sheet["AM"+row_no_str] = practical_marks[practical_no - start_practical]
+
+        practical_no = practical_no + 1
+        
 
 wb_out.save(output_file)
