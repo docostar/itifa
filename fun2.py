@@ -1,17 +1,23 @@
 import random
 
+def get_marks_based_on_grade(grade):
+    # Define grade-to-range mapping
+    grade_ranges = {
+        'A': (81, 90),
+        'B': (76, 80),
+        'C': (71, 75),
+        'D': (65, 69),
+        'E': (61, 65),
+    }
+    
+    # Check if the grade is valid
+    if grade not in grade_ranges:
+        raise ValueError("Invalid grade. Valid grades are: A, B, C, D, E.")
+    
+    # Get the range for the given grade
+    low, high = grade_ranges[grade]
+    
+    # Generate random marks within the range
+    marks = random.randint(low, high)
+    return marks
 
-
-# Input: Total marks and section-wise highest marks
-total_marks = 80
-sections = [
-    [2, 5, 8],  # Section 1
-    [3, 2, 5],  # Section 2
-    [3, 3, 4],  # Section 3
-    [1, 2, 2],  # Section 4
-    [4, 3, 3],  # Section 5
-    [4, 3, 3],  # Section 6
-    [3, 5, 2],  # Section 7
-    [7, 3, 5],  # Section 8
-    [7, 5, 3],  # Section 9
-]

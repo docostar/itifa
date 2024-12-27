@@ -17,6 +17,27 @@ def get_practical_number(sheet_name,lo_no):
 
 import random
 
+def get_marks_based_on_grade(grade):
+    # Define grade-to-range mapping
+    grade_ranges = {
+        'A': (85, 90),
+        'B': (78, 84),
+        'C': (71, 77),
+        'D': (65, 69),
+        'E': (61, 65),
+    }
+    
+    # Check if the grade is valid
+    if grade not in grade_ranges:
+        raise ValueError("Invalid grade. Valid grades are: A, B, C, D, E.")
+    
+    # Get the range for the given grade
+    low, high = grade_ranges[grade]
+    
+    # Generate random marks within the range
+    marks = random.randint(low, high)
+    return marks
+
 def get_practical_wise_marks(avg_marks, num_practicals):
     if not (60 <= avg_marks <= 90):
         raise ValueError("Average marks must be between 60 and 90.")
@@ -29,7 +50,7 @@ def get_practical_wise_marks(avg_marks, num_practicals):
         if remaining_practicals > 1:
             if avg_marks>=67:
             # Randomly distribute marks close to the average, if avg marks >66
-                mark = random.randint(max(60, avg_marks - 7), min(90, avg_marks + 7))
+                mark = random.randint(max(60, avg_marks - 6), min(90, avg_marks + 6))
             else:
                 mark = random.randint(max(60, avg_marks - 3), min(90, avg_marks + 3))
         else:

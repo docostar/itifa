@@ -1,6 +1,17 @@
 from openpyxl import load_workbook, Workbook
-from fun import get_practical_number,get_practical_wise_marks, get_section_marks, increment_column, distribute_marks
+from openpyxl.styles import Alignment, Border, Side
+from fun import *
 import shutil
+
+
+alignment = Alignment(horizontal='center', vertical='center')
+
+thin_border = Border(
+    left=Side(style='thin'),
+    right=Side(style='thin'),
+    top=Side(style='thin'),
+    bottom=Side(style='thin')
+)
 
 iti_name = "BAGASARA(MAHILA)"
 
@@ -40,7 +51,7 @@ for student_row_no in range(student_start_row,student_end_row+1):
     student_row_str=str(student_row_no)
     student_name = sheet_name["B"+student_row_str].value
     Roll_No = sheet_name["A"+student_row_str].value
-    student_main_mark = sheet_name["C"+student_row_str].value
+    student_main_mark = get_marks_based_on_grade(sheet_name["C"+student_row_str].value)
 
     sheet_to_copy = wb_out["demo"]
     student_sheet = wb_out.copy_worksheet(sheet_to_copy)
@@ -61,7 +72,7 @@ for student_row_no in range(student_start_row,student_end_row+1):
     practical_marks = get_practical_wise_marks(student_main_mark,no_of_practical)
     for row_no in range(marks_start_row,marks_start_row+no_of_practical):
         row_no_str = str(row_no)
-        student_sheet["A"+row_no_str] = "LO"+str(lo_no)
+        student_sheet["A"+row_no_str] = "LO-"+str(lo_no)
         student_sheet["B"+row_no_str] = practical_no
         total_practical_marks =  practical_marks[practical_no - start_practical]
         student_sheet["AM"+row_no_str] = total_practical_marks
@@ -74,11 +85,19 @@ for student_row_no in range(student_start_row,student_end_row+1):
                 col = increment_column(col)
             student_sheet[col+row_no_str] = sum(smark)
             col = increment_column(col)
-        col = increment_column(col)
-        col = increment_column(col)
+        
 
 
         practical_no = practical_no + 1
-        
+    
+
+
+    # Apply alignment and border to the cell range A1:C4
+    for row in student_sheet.iter_rows(min_row=marks_start_row, max_row=student_sheet.max_row, min_col=1, max_col=student_sheet.max_column):
+        for cell in row:
+            cell.alignment = alignment
+            cell.border = thin_border
+    
+
 
 wb_out.save(output_file)
